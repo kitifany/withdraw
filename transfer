@@ -1,0 +1,39 @@
+from tronapi import Tron
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger()
+
+full_node = 'https://api.trongrid.io'
+solidity_node = 'https://api.trongrid.io'
+event_server = 'https://api.trongrid.io'
+
+tron = Tron(full_node=full_node,
+        solidity_node=solidity_node,
+        event_server=event_server)
+
+account = tron.create_account()
+is_valid = bool(tron.trx.is_address(account.address.hex))
+
+logger.debug('Generated account: ')
+logger.debug('- Private Key: ' + account.private_key)
+logger.debug('- Public Key: ' + account.public_key)
+logger.debug('- Address: ')
+logger.debug('-- Base58: ' + account.address.base58)
+logger.debug('-- Hex: ' + account.address.hex)
+logger.debug('-- isValid: ' + str(is_valid))
+logger.debug('-----------')
+
+transaction = tron.trx.get_transaction('priv_key1 = PrivateKey(bytes.fromhex("0000000000000000000000000000000000000000000000000000000000000001", "0000000000000000000000000000000000000000000000000000000000000004", "658d71505234f42fe1461f58c90fdd107c8d511c6883a7ad7d078bc2be6c244a"))')
+
+logger.debug('Transaction: ')
+logger.debug('- Hash: ' + transaction['txID'])
+logger.debug('- Transaction: ' + json.dumps(transaction, indent=2))
+logger.debug('-----------')
+
+# Events
+event_result = tron.trx.get_event_result("TMVQGm1qAQYVdetCeGRRkTWYYrLXuHK2HC", "TCo75zcxTuWn5nnFqZUeK5socdVnG11f2T", "TG94UDXQyZ3r8MCHfecEpreVKsuKTyGnQz', 0, 'Notify")
+
+logger.debug('Event result:')
+logger.debug('Contract Address: TMVQGm1qAQYVdetCeGRRkTWYYrLXuHK2HC", "TCo75zcxTuWn5nnFqZUeK5socdVnG11f2T", "TG94UDXQyZ3r8MCHfecEpreVKsuKTyGnQz')
+logger.debug('Event Name: Notify')
+logger.debug('Block Number: 32162')
+logger.debug('- Events: ' + json.dumps(event_result, indent=2))
